@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "allowJs": false,
+    "strict": true,
+    "noEmit": true,
+    "noImplicitAny": true
+  },
+  "ts-node": {
+    "swc": true,
+    "esm": true,
+    "transpileOnly": true
+  }
+}

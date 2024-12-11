@@ -1,0 +1,12 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "composite": true,
+    "moduleResolution": "node16",
+    "skipLibCheck": true,
+    "target": "ES2023",
+    "module": "Node16",
+    "lib": ["es6", "DOM"],
+    "verbatimModuleSyntax": true
+  }
+}
