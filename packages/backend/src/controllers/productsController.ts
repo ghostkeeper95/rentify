@@ -4,7 +4,8 @@ import { z } from 'zod'
 
 import { Product } from '../models/Product'
 import { productFiltersSchema } from '../schemas/validationSchemas'
-import type { ProductFilters } from '../types/productTypes'
+import type { PaginatedResponse } from '../types/commonTypes'
+import type { ProductAttributes, ProductFilters } from '../types/productTypes'
 import { getFromCache, setToCache } from '../utils/cache'
 import { logger } from '../utils/logger'
 import { buildWhereClause } from '../utils/productUtils'
@@ -25,7 +26,7 @@ export const getProducts = async (req: Request<{}, {}, {}, ProductFilters>, res:
 
     const { page, limit } = validatedQuery
 
-    const where = buildWhereClause(validatedQuery)
+    const { where, order } = buildWhereClause(validatedQuery)
 
     const pageNumber = Math.max(1, Number(page) || 1)
     const limitNumber = Math.min(50, Math.max(1, Number(limit) || 10))
@@ -35,18 +36,19 @@ export const getProducts = async (req: Request<{}, {}, {}, ProductFilters>, res:
 
     const products = await Product.findAll({
       where,
+      order,
       limit: limitNumber,
       offset,
     })
 
     const totalPages = Math.ceil(totalProducts / limitNumber)
 
-    const response = {
+    const response: PaginatedResponse<ProductAttributes> = {
       total: totalProducts,
       currentPage: pageNumber,
       totalPages,
       hasNextPage: pageNumber < totalPages,
-      products,
+      data: products,
     }
 
     setToCache(cacheKey, response)

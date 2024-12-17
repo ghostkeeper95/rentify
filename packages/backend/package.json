@@ -1,5 +1,7 @@
 {
   "name": "@rentify/backend",
+  "version": "1.0.0",
+  "private": true,
   "type": "module",
   "packageManager": "yarn@4.5.3",
   "scripts": {
@@ -32,8 +34,5 @@
     "@types/sequelize": "^4.28.20",
     "nodemon": "^3.1.7",
     "tsx": "^4.19.2"
-  },
-  "workspaces": {
-    "nohoist": []
   }
 }

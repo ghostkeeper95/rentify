@@ -11,6 +11,7 @@ export class Product
 {
   public id!: number
   public name!: string
+  public name_normalized!: string
   public price!: number
   public category!: string
   public location!: string
@@ -29,6 +30,10 @@ Product.init(
       primaryKey: true,
     },
     name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    name_normalized: {
       type: DataTypes.STRING,
       allowNull: false,
     },

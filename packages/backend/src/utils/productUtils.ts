@@ -1,13 +1,22 @@
 import { Op, type WhereOptions } from 'sequelize'
 
 import type { ProductFilters } from '../types/productTypes.js'
+import { logger } from './logger.js'
 
-export const buildWhereClause = (filters: ProductFilters): WhereOptions => {
-  const { search, minPrice, maxPrice, category, location } = filters
+const validSortFields = ['price']
+
+export const buildWhereClause = (
+  filters: ProductFilters,
+): { where: WhereOptions; order: Array<[string, string]> } => {
+  const { search, minPrice, maxPrice, category, location, sortBy, sortOrder } = filters
+
   const where: WhereOptions = {}
+  const order: Array<[string, string]> = []
 
   if (search) {
-    where.name = { [Op.like]: `%${search}%` }
+    where.name_normalized = {
+      [Op.like]: `%${search.toLowerCase()}%`,
+    }
   }
 
   if (minPrice || maxPrice) {
@@ -28,5 +37,16 @@ export const buildWhereClause = (filters: ProductFilters): WhereOptions => {
     where.location = location
   }
 
-  return where
+  if (sortBy && sortOrder) {
+    const sortField = sortBy.toLowerCase()
+    const sortDirection = sortOrder.toUpperCase()
+
+    if (validSortFields.includes(sortField)) {
+      order.push([sortField, sortDirection])
+    } else {
+      logger.warn(`Invalid sortBy field: ${sortField}`)
+    }
+  }
+
+  return { where, order }
 }

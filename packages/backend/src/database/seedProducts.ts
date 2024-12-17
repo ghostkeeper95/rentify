@@ -102,7 +102,12 @@ const products = [
 
 export const seedProducts = async () => {
   try {
-    await Product.bulkCreate(products)
+    const normalizedProducts = products.map(product => ({
+      ...product,
+      name_normalized: product.name.toLowerCase(),
+    }))
+
+    await Product.bulkCreate(normalizedProducts)
     logger.info('Database seeded')
   } catch (error) {
     logger.error('Error seeding database:', error)
